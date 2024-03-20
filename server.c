@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aeminian <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/20 21:22:59 by aeminian          #+#    #+#             */
+/*   Updated: 2024/03/20 21:27:29 by aeminian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 #include <string.h>
 #include "ft_printf/ft_printf.h"
@@ -41,13 +53,13 @@
 
 void	handler(int sig)
 {
-	static int	bit = 0;
-	static int	i = 0;
+	static int	bit;
+	static int	i;
 
 	if (sig == SIGUSR1)
 		i |= (0x01 << bit);
-    else if (sig == SIGUSR2)
-        i |= 0;
+	else if (sig == SIGUSR2)
+		i |= 0;
 	bit++;
 	if (bit == 8)
 	{
@@ -56,28 +68,26 @@ void	handler(int sig)
 		bit = 0;
 	}
 }
-int main()
-{   
-    int pid;
-    pid = getpid();
-    if (pid <= 0)
-    {
-        printf("Failure!!!!");
-        exit(1);
-    }
-    printf("PID : %d\n", pid); 
-    struct sigaction sa;
-    sa.sa_flags = SA_RESTART;
-    sa.sa_handler = handler;
-    
-    while (1)
-    {
-        sigaction(SIGUSR1, &sa, NULL);
-        sigaction(SIGUSR2, &sa, NULL);
-        pause();
-    }
 
+int	main()
+{
+	int					pid;
+	struct sigaction	sa;
 
-
-    return (0);
+	pid = getpid();
+	if (pid <= 0)
+	{
+		printf("Failure!!!!");
+		exit(1);
+	}
+	printf("PID : %d\n", pid);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = handler;
+	while (1)
+	{
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
+		pause();
+	}
+	return (0);
 }
