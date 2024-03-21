@@ -1,42 +1,37 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: adel <marvin@42.fr>                        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/03/19 11:00:32 by adel              #+#    #+#              #
-#    Updated: 2024/03/20 21:13:35 by aeminian         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+SOURCES = server.c client.c
+OBJECTS = $(SOURCES:.c=.o)
 
-NAME = minitalk.a
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror 
 
-SRC = client.c
+all: server client
 
-INCLUDE =	-I minitalk
+bonus: server client
 
-OBJS = $(SRC:.c=.o)
+server: server.o libft ft_printf 
+	$(CC) -o $@ $< -Llibft -lft -Lft_printf -lftprintf
 
-CC = cc
-Rm = rm -f
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g $(INCLUDE)
+client: client.o libft
+	$(CC) -o $@ $< -Llibft -lft -Lft_printf -lftprintf
 
+%.o: %.c
+	$(CC) -c $(CFLAGS) $?
 
-all: $(OBJS) $(NAME)
+libft:
+	make -C libft 
 
-$(NAME) :	$(OBJS)
-		ar rcs $(NAME) $(OBJS)
+ft_printf:
+	make -C ft_printf
 
-%.o: %.c $(INCLUDE) Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
+clean:
+	rm -f $(OBJECTS)
+	make -C libft 
+	make -C ft_printf clean
+	
+fclean: clean
+	rm -f server client libft/libft.a 
+	rm -f ft_printf/ft_printf.a
 
-clean :
-		$(RM) $(OBJS)
+re: fclean all
 
-fclean :	clean
-		$(RM) $(NAME)
-
-re :	fclean $(NAME)
-
-.PHONY: all clean fclean re
+.PHONY: all bonus libft ft_printf clean fclean re
