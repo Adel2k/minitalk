@@ -1,55 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aeminian <aeminian@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/22 16:02:59 by aeminian          #+#    #+#             */
+/*   Updated: 2024/07/23 15:59:39 by aeminian         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
 void	handler(int sig, siginfo_t *info, void *ntg)
 {
-    (void)ntg;
-	static int	bit = 0;
-	static int	i = 0;
+	static int	bit;
+	static int	i;
+
+	(void)ntg;
 	if (sig == SIGUSR1)
 		i |= (0x01 << bit);
-    else if (sig == SIGUSR2)
-      i |= 0;
-    bit++;
-	    if (bit == 8)
-	{        
+	else if (sig == SIGUSR2)
+		i |= 0;
+	bit++;
+	if (bit == 8)
+	{
 		write(1, &i, 1);
 		i = 0;
 		bit = 0;
-        kill(info->si_pid, SIGUSR1);
+		kill(info->si_pid, SIGUSR1);
 	}
 }
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
-    (void)av;
-    int pid;
-    struct sigaction sa;
-    
-    pid = getpid();
-    if(ac == 1)
-    {
-        if (pid <= 0)
-        {
-            write(1, "Failure!!!!", 12);
-            exit(1);
-        }
-        ft_printf(">>>>>>>>>>CONNECTED TO 42POTATO'S SERVER:D<<<<<<<<<<<\n");
-        sleep(1);
-        ft_printf("Process ID : %d\n", pid); 
-        sleep(1);
-        ft_printf("Type...\n");
-        sa.sa_flags = SA_SIGINFO;
-        sa.sa_sigaction = handler;
-        while (1)
-        {
-            sigaction(SIGUSR1, &sa, NULL);
-            sigaction(SIGUSR2, &sa, NULL);
-            pause();
-        }
-    }
-    else
-    {
-        write(1, "Error!\n", 8);
-        exit(1);
-    }
-    return (0);
+	int					pid;
+	struct sigaction	sa;
+
+	(void)av;
+	pid = getpid();
+	if (ac == 1)
+	{
+		if (pid <= 0)
+		{
+			write(1, "Failure!!!!", 12);
+			exit(1);
+		}
+		ft_printf(">>>>>>>>>>CONNECTED TO 42POTATO'S SERVER");
+		ft_printf(":D<<<<<<<<<<<\nProcess ID : %d\nType...\n", pid);
+		sa.sa_flags = SA_SIGINFO;
+		sa.sa_sigaction = handler;
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
+		while (1)
+			pause();
+	}
+	return (0);
 }
+
+// system("leaks minitalk");
