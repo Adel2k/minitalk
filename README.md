@@ -1,8 +1,3 @@
-Awesome — let’s enhance your README with a clean, beginner-friendly **How It Works** section explaining the bitwise transmission via signals. Here’s your updated `README.md` with that added in:
-
----
-
-````md
 # 📡 minitalk
 
 A small data exchange project written in C for 42 School. It enables interprocess communication using UNIX signals to transmit messages from a client process to a server process, one bit at a time.
@@ -178,9 +173,3 @@ Server will display:
 **Adeline Eminian**
 GitHub: [@Adel2k](https://github.com/Adel2k)
 
-```
-
----
-
-Would you like a **Bonus Ideas / Improvements** section as well? I can suggest a few fun upgrades you could optionally implement too. 🚀
-```
